@@ -1,6 +1,7 @@
 import { getTransactions } from "~/controllers/transactions";
 import type { Route } from "./+types/home";
 import { TransactionList } from "~/components/TransactionList";
+import { Link } from "react-router";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -18,6 +19,9 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   const { transactions } = loaderData
   return (
     <div>
+      <nav>
+        <Link to="/transactions/create">Create transactions + </Link>
+      </nav>
       <TransactionList transactions={transactions} />
     </div>
   )

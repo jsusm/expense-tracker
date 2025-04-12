@@ -20,7 +20,7 @@ export function TransactionList({ transactions }: TransactionListProps) {
         </TableHeader>
         <TableBody>
           {transactions.map(t => (
-            <TableRow>
+            <TableRow key={t.id}>
               <TableCell>{t.amount}</TableCell>
               <TableCell>{t.dateTime}</TableCell>
               <TableCell>{t.category}</TableCell>

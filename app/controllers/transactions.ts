@@ -155,6 +155,13 @@ const transactions: Transaction[] = [
 	}
 ]
 
+export async function getCategories() {
+	const categories: Record<string, string> = {}
+	transactions.forEach(t => {
+		categories[t.category] = t.id
+	})
+	return Object.entries(categories).map(v => ({ id: v[1], label: v[0] }))
+}
 export async function getTransactions() {
 	return transactions
 }
