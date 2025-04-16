@@ -8,6 +8,11 @@ export interface Transaction {
 	description: string,
 }
 
+export interface Category {
+	label: string,
+	id: string,
+}
+
 const transactions: Transaction[] = [
 	{
 		"id": "txn_001",
@@ -155,7 +160,7 @@ const transactions: Transaction[] = [
 	}
 ]
 
-export async function getCategories() {
+export async function getCategories(): Promise<Category[]> {
 	const categories: Record<string, string> = {}
 	transactions.forEach(t => {
 		categories[t.category] = t.id
@@ -164,4 +169,7 @@ export async function getCategories() {
 }
 export async function getTransactions() {
 	return transactions
+}
+export async function getTransactionById(id: string) {
+	return transactions.find(t => t.id == id)
 }
