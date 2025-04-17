@@ -2,7 +2,7 @@ import type { Route } from "./+types/home";
 import { TransactionList } from "~/components/TransactionList";
 import { Link } from "react-router";
 import { db } from "~/server/db/drizzle";
-import { TransactionController } from "~/server/controllers/transactions";
+import { TransactionController } from "~/server/controllers/TransactionController";
 
 export function meta({ }: Route.MetaArgs) {
   return [

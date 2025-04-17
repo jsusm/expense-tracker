@@ -1,7 +1,7 @@
-import type { Transaction } from "~/controllers/transactions"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
 import { Button } from "./ui/button"
 import { Link } from "react-router"
+import type { Transaction } from "~/types"
 
 export type TransactionListProps = {
   transactions: Transaction[]
@@ -25,8 +25,8 @@ export function TransactionList({ transactions }: TransactionListProps) {
           {transactions.map(t => (
             <TableRow key={t.id}>
               <TableCell>{t.amount}</TableCell>
-              <TableCell>{t.dateTime}</TableCell>
-              <TableCell>{t.category.label}</TableCell>
+              <TableCell>{t.datetime}</TableCell>
+              <TableCell>{t.budget.label}</TableCell>
               <TableCell>{t.description}</TableCell>
               <TableCell>[{t.tags.join(", ")}]</TableCell>
               <TableCell>

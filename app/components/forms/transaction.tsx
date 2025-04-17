@@ -1,18 +1,25 @@
-import type { Category } from "~/controllers/transactions";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { useNumberFormat } from "@react-input/number-format";
 import { format, useMask } from "@react-input/mask";
+import type { Budget } from "~/types";
 
 export type TransactionFormFieldsProps = {
-  categories: Category[],
+  budgets: Budget[],
   defaultValues?: {
     description: string,
     amount: string,
     dateTime: string,
     tags: string[],
-    category: string,
+    budget: Budget,
+  },
+  errors?: {
+    description?: string[],
+    amount?: string[],
+    datetime?: string[],
+    tags?: string[],
+    budget?: string[],
   }
 }
 
@@ -24,22 +31,23 @@ function addCero(n: number) {
 }
 
 const options = {
-  mask: '____/__/__ h_:__',
-  replacement: { '_': /\d/, 'h': /[0 2]/ }
+  mask: '____-__-__ __:__',
+  replacement: { '_': /\d/ }
 }
 
-export function TransactionFormFields({ categories, defaultValues }: TransactionFormFieldsProps) {
+export function TransactionFormFields({ budgets, defaultValues, errors }: TransactionFormFieldsProps) {
   const dateTimeInputRef = useMask(options)
   const now = defaultValues?.dateTime ? new Date(defaultValues.dateTime) : new Date()
-  const defaultDateTime = `${now.getFullYear()}${addCero(now.getMonth())}${addCero(now.getDate())}${addCero(now.getHours())}${addCero(now.getMinutes())}`
-  console.log(defaultDateTime);
+  const defaultDateTime = `${now.getFullYear()}${addCero(now.getMonth() + 1)}${addCero(now.getDate())}${addCero(now.getHours())}${addCero(now.getMinutes())}`
 
 
   const defaultDateTimeValue = format(defaultDateTime, options)
 
   const AmountInputRef = useNumberFormat({
     locales: "en",
-    maximumFractionDigits: 2
+    maximumFractionDigits: 2,
+    format: "currency",
+    currency: "USD"
   })
   return (
     <>
@@ -53,30 +61,39 @@ export function TransactionFormFields({ categories, defaultValues }: Transaction
           ref={AmountInputRef}
           defaultValue={defaultValues?.amount}
         />
+        {(errors && errors.amount) && (
+          <p className="text-xs text-rose-400">{errors.amount[0]}</p>
+        )}
       </div>
       <div className="grid w-full max-w-sm items-center gap-1.5">
         <Label>DateTime</Label>
         <Input
           ref={dateTimeInputRef}
           inputMode="numeric"
-          name="dateTime"
-          id="dateTime"
+          name="datetime"
+          id="datetime"
           type="text"
           defaultValue={defaultDateTimeValue}
         />
+        {(errors && errors.datetime) && (
+          <p className="text-xs text-rose-400">{errors.datetime[0]}</p>
+        )}
       </div>
       <div className="grid w-full max-w-sm items-center gap-1.5">
-        <Label>Category</Label>
-        <Select name="category-id" defaultValue={defaultValues?.category}>
+        <Label>Budget</Label>
+        <Select name="budgetId" defaultValue={defaultValues?.budget.id.toString()}>
           <SelectTrigger className="w-full">
-            <SelectValue placeholder="Uncategorized" defaultValue={defaultValues?.category} />
+            <SelectValue placeholder="Uncategorized" />
           </SelectTrigger>
           <SelectContent>
-            {categories.map(c => (
-              <SelectItem key={c.id} value={c.label}>{c.label}</SelectItem>
+            {budgets.map(b => (
+              <SelectItem key={b.id} value={b.id.toString()}>{b.label}</SelectItem>
             ))}
           </SelectContent>
         </Select>
+        {(errors && errors.budget) && (
+          <p className="text-xs text-rose-400">{errors.budget[0]}</p>
+        )}
       </div>
       <div className="grid w-full max-w-sm items-center gap-1.5">
         <Label>Description</Label>
@@ -87,6 +104,9 @@ export function TransactionFormFields({ categories, defaultValues }: Transaction
           placeholder="A big burger, scort, shoes ..."
           defaultValue={defaultValues?.description}
         />
+        {(errors && errors.description) && (
+          <p className="text-xs text-rose-400">{errors.description[0]}</p>
+        )}
       </div>
       <div className="grid w-full max-w-sm items-center gap-1.5">
         <div className="grid gap-0.5">
@@ -99,6 +119,9 @@ export function TransactionFormFields({ categories, defaultValues }: Transaction
           type="text"
           defaultValue={defaultValues?.tags.join(', ')}
         />
+        {(errors && errors.tags) && (
+          <p className="text-xs text-rose-400">{errors.tags[0]}</p>
+        )}
       </div>
     </>
   )
