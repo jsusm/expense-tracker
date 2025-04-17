@@ -2,6 +2,7 @@ import { getTransactions } from "~/controllers/transactions";
 import type { Route } from "./+types/home";
 import { TransactionList } from "~/components/TransactionList";
 import { Link } from "react-router";
+import { db } from "~/server/db/drizzle";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -12,6 +13,7 @@ export function meta({ }: Route.MetaArgs) {
 
 export async function loader() {
   const transactions = await getTransactions()
+  console.log(db)
   return { transactions }
 }
 

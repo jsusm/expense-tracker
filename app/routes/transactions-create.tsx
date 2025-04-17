@@ -8,7 +8,7 @@ import { getCategories } from "~/controllers/transactions";
 import type { Route } from "./+types/transactions-create";
 import { Button } from "~/components/ui/button";
 import { TransactionFormFields } from "~/components/forms/transaction";
-import { Form, redirect } from "react-router";
+import { Form, redirect, useNavigate, useNavigation } from "react-router";
 
 export async function clientLoader() {
   const categories = await getCategories()
@@ -19,12 +19,12 @@ export async function clientLoader() {
 export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData()
   const entries = Object.fromEntries(formData)
-  console.log(entries)
   return redirect('/')
 }
 
 export default function createTransactionForm({ loaderData }: Route.ComponentProps) {
   const { categories } = loaderData
+  const navigate = useNavigate()
 
   return (
     <Form className="grid place-items-center min-h-dvh" method="post">
@@ -39,7 +39,7 @@ export default function createTransactionForm({ loaderData }: Route.ComponentPro
         </CardContent>
         <CardFooter>
           <div className="flex flex-col w-full items-stretch sm:flex-row items-center justify-end gap-4">
-            <Button type="button" variant="outline">
+            <Button type="button" variant="outline" onClick={() => navigate(-1)}>
               Calcel
             </Button>
             <Button type="submit">

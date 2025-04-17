@@ -8,7 +8,7 @@ import { getCategories, getTransactionById } from "~/controllers/transactions";
 import type { Route } from "./+types/transactions-update";
 import { Button } from "~/components/ui/button";
 import { TransactionFormFields } from "~/components/forms/transaction";
-import { Form, redirect } from "react-router";
+import { Form, redirect, useNavigate } from "react-router";
 
 export async function loader({ params }: Route.LoaderArgs) {
   const transaction = await getTransactionById(params.transactionId)
@@ -29,6 +29,7 @@ export async function action({ request }: Route.ActionArgs) {
 
 export default function createTransactionForm({ loaderData }: Route.ComponentProps) {
   const { categories, transaction } = loaderData
+  const navigate = useNavigate()
 
   return (
     <Form className="grid place-items-center min-h-dvh" method="post">
@@ -49,7 +50,7 @@ export default function createTransactionForm({ loaderData }: Route.ComponentPro
         </CardContent>
         <CardFooter>
           <div className="flex flex-col w-full items-stretch sm:flex-row justify-end gap-4">
-            <Button type="button" variant="outline">
+            <Button type="button" variant="outline" onClick={() => navigate(-1)}>
               Calcel
             </Button>
             <Button type="submit">
