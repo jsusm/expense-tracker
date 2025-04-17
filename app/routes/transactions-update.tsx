@@ -76,7 +76,7 @@ export default function updateTransactionForm({ loaderData }: Route.ComponentPro
         </CardHeader>
         <CardContent>
           <div className="flex items-center flex-col gap-4">
-            <TransactionFormFields budgets={budgets} errors={actionData?.errors?.fieldErrors} defaultValues={{ ...transaction, amount: transaction.amount.toString() }} />
+            <TransactionFormFields budgets={budgets} errors={actionData?.errors?.fieldErrors} defaultValues={{ ...transaction }} />
           </div>
         </CardContent>
         <CardFooter>

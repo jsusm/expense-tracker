@@ -4,12 +4,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { useNumberFormat, format as numberFormat } from "@react-input/number-format";
 import { format, useMask } from "@react-input/mask";
 import type { Budget } from "~/types";
+import { transactions } from "~/server/db/schema";
 
 export type TransactionFormFieldsProps = {
   budgets: Budget[],
   defaultValues?: {
     description: string,
-    amount: string,
+    amount: number,
     datetime: string,
     tags: string[],
     budget: Budget,
@@ -48,7 +49,7 @@ export function TransactionFormFields({ budgets, defaultValues, errors }: Transa
   const defaultDateTime = `${now.getFullYear()}${addCero(now.getMonth() + 1)}${addCero(now.getDate())}${addCero(now.getHours())}${addCero(now.getMinutes())}`
 
   const defaultDateTimeValue = format(defaultDateTime, dateFormatOptions)
-  const defaultAmountValue = defaultValues?.amount ? numberFormat(defaultValues.amount, { ...currencyFormatOptions, format: 'currency' }) : undefined
+  const defaultAmountValue = defaultValues?.amount ? numberFormat(defaultValues.amount / 100, { ...currencyFormatOptions, format: 'currency' }) : undefined
 
   const AmountInputRef = useNumberFormat({ ...currencyFormatOptions, format: 'currency' })
   return (
@@ -61,7 +62,7 @@ export function TransactionFormFields({ budgets, defaultValues, errors }: Transa
           id="amount"
           type="text"
           ref={AmountInputRef}
-          defaultValue={defaultValues?.amount}
+          defaultValue={defaultAmountValue}
         />
         {(errors && errors.amount) && (
           <p className="text-xs text-rose-400">{errors.amount[0]}</p>
