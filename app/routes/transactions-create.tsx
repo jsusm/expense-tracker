@@ -16,7 +16,7 @@ export async function loader() {
 }
 
 const formSchema = z.object({
-  amount: z.coerce.number().min(1),
+  amount: z.coerce.number().gt(0),
   datetime: z.string().regex(/\d{4}-\d\d-\d\d \d\d:\d\d/),
   tags: z.string(),
   description: z.string(),
