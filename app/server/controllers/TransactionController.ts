@@ -48,8 +48,8 @@ export class TransactionController {
 		return { transactionId: result.insertedId }
 	}
 
-	async read() {
-		return (await this.db.select({
+	private selectTransaction() {
+		return this.db.select({
 			id: transactions.id,
 			amount: transactions.amount,
 			datetime: sql<string>`datetime(${transactions.datetime}, 'unixepoch', '-04:00')`,
@@ -64,8 +64,19 @@ export class TransactionController {
 			.innerJoin(budgets, eq(transactions.budgetId, budgets.id))
 			.leftJoin(transactionsToTags, eq(transactions.id, transactionsToTags.transactionId))
 			.groupBy(transactions.id)
-			.orderBy(desc(transactions.datetime))
-			.limit(100)).map(t => ({ ...t, tags: t.tags.split(',') }))
+	}
+
+	async read() {
+		return (
+			await this.selectTransaction()
+				.orderBy(desc(transactions.datetime))
+				.limit(100)
+		)
+			.map(t => ({ ...t, tags: t.tags.split(',') }))
+	}
+
+	async findById(id: number) {
+		return (await this.selectTransaction().where(eq(transactions.id, id))).map(t => ({ ...t, tags: t.tags.split(',') })).at(0)
 	}
 
 	async update(id: number, payload: z.infer<typeof updateTransactionPayload>) {

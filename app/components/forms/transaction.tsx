@@ -1,7 +1,7 @@
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { useNumberFormat } from "@react-input/number-format";
+import { useNumberFormat, format as numberFormat } from "@react-input/number-format";
 import { format, useMask } from "@react-input/mask";
 import type { Budget } from "~/types";
 
@@ -10,7 +10,7 @@ export type TransactionFormFieldsProps = {
   defaultValues?: {
     description: string,
     amount: string,
-    dateTime: string,
+    datetime: string,
     tags: string[],
     budget: Budget,
   },
@@ -30,25 +30,27 @@ function addCero(n: number) {
   return n
 }
 
-const options = {
+const dateFormatOptions = {
   mask: '____-__-__ __:__',
   replacement: { '_': /\d/ }
 }
 
+const currencyFormatOptions = {
+  locales: "en",
+  maximumFractionDigits: 2,
+  format: "currency",
+  currency: "USD"
+}
+
 export function TransactionFormFields({ budgets, defaultValues, errors }: TransactionFormFieldsProps) {
-  const dateTimeInputRef = useMask(options)
-  const now = defaultValues?.dateTime ? new Date(defaultValues.dateTime) : new Date()
+  const dateTimeInputRef = useMask(dateFormatOptions)
+  const now = defaultValues?.datetime ? new Date(defaultValues.datetime) : new Date()
   const defaultDateTime = `${now.getFullYear()}${addCero(now.getMonth() + 1)}${addCero(now.getDate())}${addCero(now.getHours())}${addCero(now.getMinutes())}`
 
+  const defaultDateTimeValue = format(defaultDateTime, dateFormatOptions)
+  const defaultAmountValue = defaultValues?.amount ? numberFormat(defaultValues.amount, { ...currencyFormatOptions, format: 'currency' }) : undefined
 
-  const defaultDateTimeValue = format(defaultDateTime, options)
-
-  const AmountInputRef = useNumberFormat({
-    locales: "en",
-    maximumFractionDigits: 2,
-    format: "currency",
-    currency: "USD"
-  })
+  const AmountInputRef = useNumberFormat({ ...currencyFormatOptions, format: 'currency' })
   return (
     <>
       <div className="grid w-full max-w-sm items-center gap-1.5">
