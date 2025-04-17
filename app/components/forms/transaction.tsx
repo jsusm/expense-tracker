@@ -94,7 +94,7 @@ export function TransactionFormFields({ categories, defaultValues }: Transaction
           <p className="text-xs text-stone-500">Separate tags with commas ","</p>
         </div>
         <Input
-          name="Tags"
+          name="tags"
           id="Tags"
           type="text"
           defaultValue={defaultValues?.tags.join(', ')}

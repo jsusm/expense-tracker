@@ -10,10 +10,9 @@ export const categories = sqliteTable("categories", {
 })
 
 export const tags = sqliteTable("tags", {
-	id: integer().primaryKey({ autoIncrement: true }),
-	label: text().notNull(),
-	description: text().notNull(),
-	color: text(),
+	label: text().notNull().primaryKey(),
+	description: text().default(''),
+	color: text().default(''),
 })
 
 export const transactions = sqliteTable("transactions", {
@@ -27,9 +26,9 @@ export const transactions = sqliteTable("transactions", {
 
 export const transactionsToTags = sqliteTable("transactions_to_tags", {
 	transactionId: integer("transaction_id").notNull().references(() => transactions.id),
-	tagId: integer("tag_id").notNull().references(() => tags.id)
+	tag: text("tag_id").notNull().references(() => tags.label)
 }, t => [
-	primaryKey({ columns: [t.transactionId, t.tagId] })
+	primaryKey({ columns: [t.transactionId, t.tag] })
 ])
 
 export const transactionsToTagsRelations = relations(transactionsToTags, ({ one }) => ({
@@ -38,8 +37,8 @@ export const transactionsToTagsRelations = relations(transactionsToTags, ({ one 
 		references: [transactions.id],
 	}),
 	tag: one(tags, {
-		fields: [transactionsToTags.tagId],
-		references: [tags.id],
+		fields: [transactionsToTags.tag],
+		references: [tags.label],
 	}),
 }))
 

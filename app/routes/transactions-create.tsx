@@ -1,24 +1,41 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
-import { useMask, type MaskOptions, format } from "@react-input/mask"
-import { useNumberFormat } from "@react-input/number-format"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "~/components/ui/select";
-import { getCategories } from "~/controllers/transactions";
+// import { getCategories } from "~/controllers/transactions";
 import type { Route } from "./+types/transactions-create";
 import { Button } from "~/components/ui/button";
 import { TransactionFormFields } from "~/components/forms/transaction";
-import { Form, redirect, useNavigate, useNavigation } from "react-router";
+import { Form, redirect, useNavigate, data } from "react-router";
+import { createTransactionPayload, TransactionController } from "~/server/controllers/transactions";
+import { db } from "~/server/db/drizzle";
+import type { Category } from "~/controllers/transactions";
 
 export async function clientLoader() {
-  const categories = await getCategories()
+  const categories: Category[] = []
   return { categories }
-
 }
 
 export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData()
   const entries = Object.fromEntries(formData)
+
+  const parsedData = createTransactionPayload.safeParse({
+    amount: parseInt(entries.amount as string) * 100,
+    dateTime: new Date(entries.dateTime as string).toISOString(),
+    description: entries.description,
+    tags: (entries.tags as string).split(',').map(s => s.trim())
+  })
+
+  if (!parsedData.success) {
+    console.log(parsedData.error.format())
+    throw Response.json({ errors: parsedData.error.format() }, { status: 400 })
+  }
+
+  console.log(parsedData.data)
+
+  const controller = new TransactionController(db)
+
+  controller.create(parsedData.data)
+
   return redirect('/')
 }
 
@@ -34,7 +51,13 @@ export default function createTransactionForm({ loaderData }: Route.ComponentPro
         </CardHeader>
         <CardContent>
           <div className="flex items-center flex-col gap-4">
-            <TransactionFormFields categories={categories} />
+            <TransactionFormFields categories={categories} defaultValues={{
+              amount: "100",
+              category: "Transportation",
+              description: "pepelandia",
+              tags: ["pepe", "landia"],
+              dateTime: "2025/02/28 12:30"
+            }} />
           </div>
         </CardContent>
         <CardFooter>

@@ -1,8 +1,8 @@
-import { getTransactions } from "~/controllers/transactions";
 import type { Route } from "./+types/home";
 import { TransactionList } from "~/components/TransactionList";
 import { Link } from "react-router";
 import { db } from "~/server/db/drizzle";
+import { TransactionController } from "~/server/controllers/transactions";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -12,9 +12,8 @@ export function meta({ }: Route.MetaArgs) {
 }
 
 export async function loader() {
-  const transactions = await getTransactions()
-  console.log(db)
-  return { transactions }
+  const result = await new TransactionController(db).read()
+  return { transactions: result }
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {

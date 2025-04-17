@@ -26,7 +26,7 @@ export function TransactionList({ transactions }: TransactionListProps) {
             <TableRow key={t.id}>
               <TableCell>{t.amount}</TableCell>
               <TableCell>{t.dateTime}</TableCell>
-              <TableCell>{t.category}</TableCell>
+              <TableCell>{t.category.label}</TableCell>
               <TableCell>{t.description}</TableCell>
               <TableCell>[{t.tags.join(", ")}]</TableCell>
               <TableCell>
