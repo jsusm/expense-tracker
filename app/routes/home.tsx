@@ -6,6 +6,12 @@ import { TransactionController } from "~/server/controllers/TransactionControlle
 import { useMemo, useState } from "react";
 import { TransactionDetailResponsive } from "~/components/TransactionDetails";
 import { Button } from "~/components/ui/button";
+import { budgets } from "~/server/db/schema";
+import { BudgetController } from "~/server/controllers/BudgetsController";
+import { currencyFormatter } from "~/lib/utils";
+import { Progress } from "~/components/ui/progress";
+import { TransactionsPannel } from "~/components/TransactionsPannel";
+import { BudgetPannel } from "~/components/BudgetPannel";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -16,28 +22,20 @@ export function meta({ }: Route.MetaArgs) {
 
 export async function loader() {
   const result = await new TransactionController(db).read()
-  return { transactions: result }
+  const budgets = await new BudgetController(db).read()
+
+  console.log(budgets)
+
+  return { transactions: result, budgets }
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-  const { transactions } = loaderData
-
-  const [transactionDialogOpen, setTransactionDialogOpen] = useState(false)
-  const [selectedTransactionId, setSelectedTransactionId] = useState<number | undefined>(undefined)
-  const transaction = useMemo(() => transactions.find(t => t.id == selectedTransactionId), [transactions, selectedTransactionId])
+  const { transactions, budgets } = loaderData
 
   return (
-    <div>
-      <nav className="px-4 py-4">
-        <Button asChild>
-          <Link to="/transactions/create">Create transactions + </Link>
-        </Button>
-      </nav>
-      <TransactionList transactions={transactions} onSelectTransaction={(id: number) => {
-        setSelectedTransactionId(id)
-        setTransactionDialogOpen(true)
-      }} />
-      <TransactionDetailResponsive isOpen={transactionDialogOpen} setOpen={setTransactionDialogOpen} transaction={transaction} />
+    <div className="flex flex-col md:flex-row">
+      <BudgetPannel budgets={budgets} className="md:w-lg" />
+      <TransactionsPannel className="md:w-lg" transactions={transactions} />
     </div>
   )
 }

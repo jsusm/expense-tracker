@@ -3,6 +3,12 @@ export type Budget = {
   id: number;
 }
 
+export type BudgetView = {
+  label: string;
+  id: number;
+  budgetExpended: number;
+}
+
 export type Transaction = {
   id: number,
   amount: number,
