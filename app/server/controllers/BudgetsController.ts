@@ -1,13 +1,12 @@
+import { eq, sql } from "drizzle-orm";
 import type { db as _db } from "../db/drizzle";
 import { budgets, transactions } from "../db/schema";
-import { eq, sql } from "drizzle-orm";
 
 export class BudgetController {
-	constructor(public db: typeof _db) {
-	}
+	constructor(public db: typeof _db) {}
 
 	async getBudgets() {
-		return await this.db.select().from(budgets)
+		return await this.db.select().from(budgets);
 	}
 
 	async read() {
@@ -15,10 +14,10 @@ export class BudgetController {
 			.select({
 				id: budgets.id,
 				label: budgets.label,
-				budgetExpended: sql<number>`SUM(${transactions.amount})`
+				budgetExpended: sql<number>`SUM(${transactions.amount})`,
 			})
 			.from(budgets)
 			.leftJoin(transactions, eq(budgets.id, transactions.budgetId))
-			.groupBy(budgets.id)
+			.groupBy(budgets.id);
 	}
 }
