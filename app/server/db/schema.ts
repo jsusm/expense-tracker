@@ -20,13 +20,13 @@ export const transactions = sqliteTable("transactions", {
 	amount: int().notNull(),
 	datetime: int("date_time", { mode: 'timestamp' }).notNull(),
 	description: text().default('').notNull(),
-	budgetId: integer("budget_id").references(() => budgets.id).notNull(),
+	budgetId: integer("budget_id").references(() => budgets.id, { onDelete: 'set null' }),
 	currency: text().notNull().default('VES'),
 })
 
 export const transactionsToTags = sqliteTable("transactions_to_tags", {
-	transactionId: integer("transaction_id").notNull().references(() => transactions.id),
-	tag: text("tag").notNull().references(() => tags.label)
+	transactionId: integer("transaction_id").notNull().references(() => transactions.id, { onDelete: 'cascade' }),
+	tag: text("tag").notNull().references(() => tags.label, { onDelete: 'cascade' })
 }, t => [
 	primaryKey({ columns: [t.transactionId, t.tag] })
 ])

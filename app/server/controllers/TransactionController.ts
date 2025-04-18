@@ -88,4 +88,8 @@ export class TransactionController {
 			})
 			.where(eq(transactions.id, id))
 	}
+
+	async delete(id: number) {
+		return await this.db.delete(transactions).where(eq(transactions.id, id))
+	}
 }

@@ -5,7 +5,7 @@ import { useMediaQuery } from '@uidotdev/usehooks'
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
 import type { Transaction } from "~/types";
-import { Link } from "react-router";
+import { Form, Link } from "react-router";
 
 function TransactionDetails({ transaction, className }: { transaction?: Transaction, className?: string }) {
   return (
@@ -57,7 +57,9 @@ export function TransactionDetailResponsive({ transaction, isOpen, setOpen }: { 
                 Update
               </Link>
             </Button>
-            <Button variant='destructive'>Delete</Button>
+            <Form action={`/transactions/${transaction?.id}/delete`} method="POST">
+              <Button variant='destructive'>Delete</Button>
+            </Form>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -83,7 +85,9 @@ export function TransactionDetailResponsive({ transaction, isOpen, setOpen }: { 
               Update
             </Link>
           </Button>
-          <Button variant='destructive'>Delete</Button>
+          <Form action={`/transactions/${transaction?.id}/delete`} method="POST" className="w-full flex flex-col">
+            <Button variant='destructive'>Delete</Button>
+          </Form>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

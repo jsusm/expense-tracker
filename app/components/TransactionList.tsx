@@ -14,14 +14,14 @@ export function TransactionList({ transactions, onSelectTransaction }: Transacti
     <div className="max-w-lg mx-auto px-4">
       <ul className="flex flex-col sm:gap-4 gap-3">
         {transactions.map(t => (
-          <li>
+          <li key={t.id}>
             <button
               className="flex items-center gap-4 border border-stone-800 hover:border-stone-700 rounded-lg bg-stone-800 px-3 sm:px-4 py-2 sm:py-3 shadow group relative active:bg-stone-900 transition-colors w-full"
               onClick={() => onSelectTransaction(t.id)}
             >
               <div className="flex gap-1 group-hover:opacity-100 opacity-0 transition absolute right-0 -top-3">
                 {t.tags.map(tag => (
-                  <span className="px-1 py-0.5 text-xs text-stone-400 bg-stone-800 shadow rounded border border-stone-600 hover:bg-stone-700 transition cursor-pointer active:bg-stone-900">{tag}</span>
+                  <span key={tag} className="px-1 py-0.5 text-xs text-stone-400 bg-stone-800 shadow rounded border border-stone-600 hover:bg-stone-700 transition cursor-pointer active:bg-stone-900">{tag}</span>
                 ))}
               </div>
               <i className="size-4 rounded-full bg-amber-400 shadow-xs"></i>

@@ -5,6 +5,7 @@ import { db } from "~/server/db/drizzle";
 import { TransactionController } from "~/server/controllers/TransactionController";
 import { useMemo, useState } from "react";
 import { TransactionDetailResponsive } from "~/components/TransactionDetails";
+import { Button } from "~/components/ui/button";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -27,8 +28,10 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 
   return (
     <div>
-      <nav>
-        <Link to="/transactions/create">Create transactions + </Link>
+      <nav className="px-4 py-4">
+        <Button asChild>
+          <Link to="/transactions/create">Create transactions + </Link>
+        </Button>
       </nav>
       <TransactionList transactions={transactions} onSelectTransaction={(id: number) => {
         setSelectedTransactionId(id)
