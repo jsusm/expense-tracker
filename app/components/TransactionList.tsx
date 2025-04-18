@@ -2,6 +2,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import { Button } from "./ui/button"
 import { Link } from "react-router"
 import type { Transaction } from "~/types"
+import { currencyFormatter } from "~/lib/utils"
 
 export type TransactionListProps = {
   transactions: Transaction[];
@@ -30,7 +31,7 @@ export function TransactionList({ transactions, onSelectTransaction }: Transacti
                   <p className="text-xs sm:text-sm text-stone-400">{t.description}</p>
                 </div>
                 <div className="text-right">
-                  <p className="sm:text-lg text-stone-100 font-medium leading-6">{t.amount}</p>
+                  <p className="sm:text-lg text-stone-100 font-medium leading-6">{currencyFormatter.format(t.amount / 100)}</p>
                   <div className="flex gap-2 items-center">
                     <p className="text-xs sm:text-sm text-stone-400">{t.datetime}</p>
                   </div>

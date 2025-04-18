@@ -41,7 +41,7 @@ export async function action({ request, params }: Route.ActionArgs) {
   const formData = await request.formData()
   const entries = Object.fromEntries(formData)
 
-  const parsedData = formSchema.safeParse({ ...entries, amount: entries.amount.slice(1) })
+  const parsedData = formSchema.safeParse({ ...entries, amount: (entries.amount as string).replaceAll("$", "").replaceAll(",", "") })
 
   // Handle error
   if (!parsedData.success) {
