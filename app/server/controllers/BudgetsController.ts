@@ -26,6 +26,20 @@ export class BudgetController {
 			})
 			.from(budgets)
 			.leftJoin(transactions, eq(budgets.id, transactions.budgetId))
+			.limit(5)
+			.groupBy(budgets.id);
+	}
+
+	async findById(id: number) {
+		return await this.db
+			.select({
+				id: budgets.id,
+				label: budgets.label,
+				budgetExpended: sql<number>`SUM(${transactions.amount})`,
+			})
+			.from(budgets)
+			.where(eq(budgets.id, id))
+			.leftJoin(transactions, eq(budgets.id, transactions.budgetId))
 			.groupBy(budgets.id);
 	}
 

@@ -31,11 +31,13 @@ export class TransactionController {
 		// insert non existing tags
 		const inserts = [];
 		for (const tagLabel of nonExistingTags) {
-			inserts.push(
-				this.db.insert(tags).values({
-					label: tagLabel,
-				}),
-			);
+			if (tagLabel !== "") {
+				inserts.push(
+					this.db.insert(tags).values({
+						label: tagLabel,
+					}),
+				);
+			}
 		}
 
 		await Promise.all(inserts);
@@ -108,5 +110,25 @@ export class TransactionController {
 
 	async delete(id: number) {
 		return await this.db.delete(transactions).where(eq(transactions.id, id));
+	}
+
+	async findByBudgetId(budgetId: number) {
+		return (
+			await this.db
+				.select({
+					id: transactions.id,
+					amount: transactions.amount,
+					datetime: sql<string>`datetime(${transactions.datetime}, 'unixepoch', '-04:00')`,
+					description: transactions.description,
+					tags: sql<string>`IFNULL(GROUP_CONCAT(${transactionsToTags.tag}, ','), '')`,
+				})
+				.from(transactions)
+				.where(eq(transactions.budgetId, budgetId))
+				.leftJoin(
+					transactionsToTags,
+					eq(transactions.id, transactionsToTags.transactionId),
+				)
+				.groupBy(transactions.id)
+		).map((t) => ({ ...t, tags: t.tags.split(",") }));
 	}
 }

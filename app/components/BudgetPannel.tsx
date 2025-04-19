@@ -7,21 +7,22 @@ import { Progress } from "./ui/progress";
 export function BudgetPannel({
 	budgets,
 	className,
-}: { budgets: BudgetView[]; className: string }) {
+	title = "Budgets",
+}: { budgets: BudgetView[]; className?: string; title?: string }) {
 	return (
 		<div className={className}>
-			<div className="px-4 py-4 flex justify-between">
-				<p className="text-lg font-medium">Budgets</p>
+			<div className="py-4 flex justify-between">
+				<p className="text-lg font-medium">{title}</p>
 				<Button asChild>
 					<Link to="/budgets/create">Create Budget + </Link>
 				</Button>
 			</div>
-			<div className="px-4">
+			<div className="">
 				<ul className="flex flex-col sm:gap-4 gap-3">
 					{budgets.map((b) => (
 						<li key={b.id}>
-							<button
-								type="button"
+							<Link
+								to={`/budgets/${b.id}`}
 								className="flex items-center gap-4 border border-stone-800 hover:border-stone-700 rounded-lg bg-stone-800 px-3 sm:px-4 py-2 sm:py-3 shadow group relative active:bg-stone-900 transition-colors w-full"
 							>
 								<i className="size-4 rounded-full bg-amber-400 shadow-xs" />
@@ -38,7 +39,7 @@ export function BudgetPannel({
 										<Progress value={50} />
 									</div>
 								</div>
-							</button>
+							</Link>
 						</li>
 					))}
 				</ul>

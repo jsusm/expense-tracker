@@ -6,4 +6,5 @@ export default [
 	route("transactions/:transactionId/edit", "routes/transactions-update.tsx"),
 	route("transactions/:transactionId/delete", "routes/transactions-delete.tsx"),
 	route("budgets/create", "routes/budgets-create.tsx"),
+	route("budgets/:budgetId", "routes/budget.tsx"),
 ] satisfies RouteConfig;

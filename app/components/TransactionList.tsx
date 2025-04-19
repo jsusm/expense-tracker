@@ -21,8 +21,13 @@ export function TransactionList({
 	onSelectTransaction,
 }: TransactionListProps) {
 	return (
-		<div className="px-4">
+		<div className="">
 			<ul className="flex flex-col sm:gap-4 gap-3">
+				{!transactions.length && (
+					<p className="sm:text-lg font-medium text-center">
+						There's no Transactions
+					</p>
+				)}
 				{transactions.map((t) => (
 					<li key={t.id}>
 						<button
