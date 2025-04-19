@@ -43,7 +43,7 @@ export default function BudgetCreate() {
 
 	return (
 		<Form className="min-h-screen grid place-items-center" method="post">
-			<Card className="w-sm">
+			<Card className="max-w-sm w-full">
 				<CardHeader>
 					<CardTitle>Create Budget</CardTitle>
 				</CardHeader>
@@ -70,7 +70,7 @@ export default function BudgetCreate() {
 						</div>
 					</div>
 				</CardContent>
-				<CardFooter className="justify-end gap-4">
+				<CardFooter className="flex-col items-stretch sm:flex-row justify-end gap-4">
 					<Button type="button" variant="outline" onClick={() => navigate(-1)}>
 						Calcel
 					</Button>
