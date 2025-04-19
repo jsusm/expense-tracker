@@ -23,6 +23,7 @@ export class TransactionController {
 			.select()
 			.from(tags)
 			.where(inArray(tags.label, transaction.tags));
+
 		const existingTagsLabels = existingTags.map((t) => t.label);
 		const nonExistingTags = transaction.tags.filter(
 			(t) => !existingTagsLabels.includes(t),
@@ -70,7 +71,7 @@ export class TransactionController {
 					label: budgets.label,
 					id: budgets.id,
 				},
-				tags: sql<string>`GROUP_CONCAT(${transactionsToTags.tag}, ',')`,
+				tags: sql<string>`IFNULL(GROUP_CONCAT(${transactionsToTags.tag}, ','), '')`,
 			})
 			.from(transactions)
 			.innerJoin(budgets, eq(transactions.budgetId, budgets.id))
@@ -82,11 +83,11 @@ export class TransactionController {
 	}
 
 	async read() {
-		return (
-			await this.selectTransaction()
-				.orderBy(desc(transactions.datetime))
-				.limit(100)
-		).map((t) => ({ ...t, tags: t.tags.split(",") }));
+		const result = await this.selectTransaction()
+			.orderBy(desc(transactions.datetime))
+			.limit(100);
+
+		return result.map((t) => ({ ...t, tags: t.tags.split(",") }));
 	}
 
 	async findById(id: number) {

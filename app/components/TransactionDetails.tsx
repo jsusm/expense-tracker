@@ -82,6 +82,7 @@ export function TransactionDetailResponsive({
 						<Form
 							action={`/transactions/${transaction?.id}/delete`}
 							method="POST"
+							onSubmit={() => setOpen(false)}
 						>
 							<Button variant="destructive">Delete</Button>
 						</Form>
@@ -107,6 +108,7 @@ export function TransactionDetailResponsive({
 						action={`/transactions/${transaction?.id}/delete`}
 						method="POST"
 						className="w-full flex flex-col"
+						onSubmit={() => setOpen(false)}
 					>
 						<Button variant="destructive">Delete</Button>
 					</Form>

@@ -1,7 +1,7 @@
 import { eq, sql } from "drizzle-orm";
+import * as z from "zod";
 import type { db as _db } from "../db/drizzle";
 import { budgets, transactions } from "../db/schema";
-import * as z from "zod";
 
 export const createBudgetPayload = z.object({
 	label: z.string(),
@@ -11,7 +11,7 @@ export const createBudgetPayload = z.object({
 export const updateBudgetPayload = createBudgetPayload.partial();
 
 export class BudgetController {
-	constructor(public db: typeof _db) { }
+	constructor(public db: typeof _db) {}
 
 	async getBudgets() {
 		return await this.db.select().from(budgets);
