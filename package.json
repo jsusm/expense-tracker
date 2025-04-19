@@ -7,7 +7,8 @@
 		"dev": "react-router dev",
 		"start": "react-router-serve ./build/server/index.js",
 		"typecheck": "react-router typegen && tsc",
-		"format": "biome check --write ./app"
+		"format": "biome check --write ./app",
+		"job:createGoals": "bun ./app/server/jobs/createGoals.ts"
 	},
 	"dependencies": {
 		"@fontsource/lxgw-wenkai-mono-tc": "^5.2.5",
