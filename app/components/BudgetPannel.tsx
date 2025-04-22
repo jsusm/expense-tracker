@@ -36,7 +36,7 @@ export function BudgetPannel({
 										</p>
 									</div>
 									<div className="w-full">
-										<Progress value={50} />
+										<Progress value={(b.budgetExpended * 100) / b.goal.goal} />
 									</div>
 								</div>
 							</Link>

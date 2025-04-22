@@ -7,6 +7,9 @@ export type BudgetView = {
 	label: string;
 	id: number;
 	budgetExpended: number;
+	goal: {
+		goal: number;
+	};
 };
 
 export type Transaction = {
