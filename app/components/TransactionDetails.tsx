@@ -1,4 +1,4 @@
-import { useMediaQuery } from "@uidotdev/usehooks";
+import { useMediaQuery } from "../hooks/useMediaQuery";
 import { Form, Link } from "react-router";
 import { Button } from "~/components/ui/button";
 import {
@@ -30,7 +30,7 @@ function TransactionDetails({
 			<div className="flex justify-between items-center">
 				<p className="font-medium text-lg">You spend</p>
 				<p className="font-medium text-lg">
-					{currencyFormatter.format(transaction?.amount / 100)}
+					{currencyFormatter.format(transaction?.amount ?? 0 / 100)}
 				</p>
 			</div>
 			<div className="flex justify-between items-center">
@@ -62,10 +62,7 @@ export function TransactionDetailResponsive({
 	isOpen: boolean;
 	setOpen: (v: boolean) => void;
 }) {
-	if (typeof window === "undefined") {
-		return null;
-	}
-	const isDesktop = useMediaQuery("(min-width: 768px)");
+	const isDesktop = useMediaQuery("(min-width: 768px)", true);
 	if (isDesktop) {
 		return (
 			<Dialog open={isOpen} onOpenChange={setOpen}>

@@ -10,3 +10,7 @@ export const currencyFormatter = new Intl.NumberFormat("en", {
 	minimumFractionDigits: 2,
 	style: "currency",
 });
+
+export function removeNumberFormat(number: string) {
+	return number.replaceAll(/[^\d\.]/gi, "");
+}

@@ -12,8 +12,7 @@ async function createGoalsJob() {
 	const _budgets = await db
 		.select({
 			budgetId: budgets.id,
-			goalId: budgetGoals.id,
-			lastGoalId: lastGoal.id,
+			goal: budgetGoals.goal,
 			lastGoal: lastGoal.goal,
 		})
 		.from(budgets)
@@ -39,7 +38,7 @@ async function createGoalsJob() {
 	const inserts = [];
 
 	for (const budget of _budgets) {
-		if (budget.goalId === null) {
+		if (budget.goal === null) {
 			inserts.push(
 				db.insert(budgetGoals).values({
 					budgetId: budget.budgetId,
@@ -56,9 +55,9 @@ async function createGoalsJob() {
 		`LOG: ${inserts.length} of ${_budgets.length} have no goal for month ${currentMonth}-${currentYear}`,
 	);
 
-	// await Promise.all(inserts);
+	await Promise.all(inserts);
 
-	// console.log({ currentMonth, currentYear });
+	console.log({ currentMonth, currentYear });
 }
 
 createGoalsJob();

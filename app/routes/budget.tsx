@@ -1,11 +1,7 @@
-import { BudgetController } from "~/server/controllers/BudgetsController";
-import type { Route } from "./+types/budget";
-import { db } from "~/server/db/drizzle";
-import { currencyFormatter } from "~/lib/utils";
-import { TransactionController } from "~/server/controllers/TransactionController";
-import { TransactionsPannel } from "~/components/TransactionsPannel";
-import type { Transaction } from "~/types";
+import { Link, data } from "react-router";
+import { BudgetGoalForm } from "~/components/BudgetGoalForm";
 import { BudgetPannel } from "~/components/BudgetPannel";
+import { TransactionsPannel } from "~/components/TransactionsPannel";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -14,7 +10,17 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
-import { Link } from "react-router";
+import { Button } from "~/components/ui/button";
+import { currencyFormatter, removeNumberFormat } from "~/lib/utils";
+import {
+	BudgetGoalsController,
+	createBudgetGoalSchema,
+} from "~/server/controllers/BudgetGoalsController";
+import { BudgetController } from "~/server/controllers/BudgetsController";
+import { TransactionController } from "~/server/controllers/TransactionController";
+import { db } from "~/server/db/drizzle";
+import type { Transaction } from "~/types";
+import type { Route } from "./+types/budget";
 
 export async function loader({ params }: Route.LoaderArgs) {
 	const budgetId = Number.parseInt(params.budgetId);
@@ -35,11 +41,37 @@ export async function loader({ params }: Route.LoaderArgs) {
 
 	return { budget, transactions, otherBudgets };
 }
+
+export async function action({ params, request }: Route.ActionArgs) {
+	let budgetId: number;
+	try {
+		budgetId = Number.parseInt(params.budgetId);
+	} catch (error) {
+		throw new Response("Not found", { status: 404 });
+	}
+
+	const formData = await request.formData();
+	const fields = Object.fromEntries(formData);
+
+	const parsedData = createBudgetGoalSchema.safeParse({
+		goal: Number.parseFloat(removeNumberFormat(fields.goal as string)) * 100,
+	});
+	if (!parsedData.success) {
+		// TODO: Add status code
+		return data(
+			{ success: false, errors: parsedData.error.flatten() },
+			{ status: 400 },
+		);
+	}
+
+	await new BudgetGoalsController(db).create(budgetId, parsedData.data);
+}
+
 export default function Budget({ loaderData }: Route.ComponentProps) {
 	const { budget, transactions, otherBudgets } = loaderData;
 
 	return (
-		<div className="grid sm:pt-8 sm:px-8 gap-y-8">
+		<div className="grid sm:pt-8 pt-8 px-4 sm:px-8 gap-y-8">
 			<Breadcrumb>
 				<BreadcrumbList>
 					<BreadcrumbItem>
@@ -53,14 +85,33 @@ export default function Budget({ loaderData }: Route.ComponentProps) {
 					</BreadcrumbItem>
 				</BreadcrumbList>
 			</Breadcrumb>
-			<div className="grid">
-				<p className="text-lg sm:text-2xl font-medium">{budget.label}</p>
-				<p className="text-lg">
-					Total Expended:{" "}
-					{currencyFormatter.format(budget.budgetExpended / 100)}
-				</p>
+			<div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
+				<div>
+					<p className="text-lg sm:text-2xl font-medium">{budget.label}</p>
+					<p className="text-lg">
+						Total Expended:{" "}
+						{currencyFormatter.format(budget.budgetExpended / 100)}
+						{budget.goal?.defined && (
+							<span>
+								/ {currencyFormatter.format((budget.goal.goal ?? 0) / 100)}
+							</span>
+						)}
+					</p>
+				</div>
+				<div className="flex gap-4">
+					<BudgetGoalForm
+						lastGoal={budget.goal?.lastGoal}
+						goalDefined={budget.goal?.defined}
+					>
+						<Button variant={budget.goal?.defined ? "secondary" : "default"}>
+							{!budget.goal?.defined ? "Define a Goal" : "Change goal"}
+						</Button>
+					</BudgetGoalForm>
+					<Button variant="secondary">Edit</Button>
+					<Button variant="destructive">Delete</Button>
+				</div>
 			</div>
-			<div className="grid grid-cols-2 max-w-5xl gap-8">
+			<div className="grid md:grid-cols-2 max-w-5xl gap-8">
 				<BudgetPannel budgets={otherBudgets} />
 				<TransactionsPannel transactions={transactions} />
 			</div>

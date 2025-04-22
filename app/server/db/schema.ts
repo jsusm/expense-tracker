@@ -15,14 +15,17 @@ export const budgets = sqliteTable("budgets", {
 	icon: text(),
 });
 
-export const budgetGoals = sqliteTable("budget", {
-	id: integer().primaryKey({ autoIncrement: true }),
-	month: integer().notNull(),
-	year: integer().notNull(),
-	goal: integer().notNull(),
-	budgetId: integer("budget_id").references(() => budgets.id),
-	defined: integer({ mode: "boolean" }).default(false).notNull(),
-});
+export const budgetGoals = sqliteTable(
+	"budget",
+	{
+		month: integer().notNull(),
+		year: integer().notNull(),
+		goal: integer().notNull(),
+		budgetId: integer("budget_id").references(() => budgets.id),
+		defined: integer({ mode: "boolean" }).default(false).notNull(),
+	},
+	(t) => [primaryKey({ columns: [t.month, t.year, t.budgetId] })],
+);
 
 export const tags = sqliteTable("tags", {
 	label: text().notNull().primaryKey(),
@@ -85,5 +88,8 @@ export const transactionsRelations = relations(transactions, ({ one }) => ({
 }));
 
 export const budgetGoalsRelations = relations(budgetGoals, ({ one }) => ({
-	budget: one(budgets, { fields: [budgetGoals.id], references: [budgets.id] }),
+	budget: one(budgets, {
+		fields: [budgetGoals.budgetId],
+		references: [budgets.id],
+	}),
 }));
