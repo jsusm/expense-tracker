@@ -1,15 +1,5 @@
-import { Link } from "react-router";
 import { currencyFormatter } from "~/lib/utils";
 import type { Transaction } from "~/types";
-import { Button } from "./ui/button";
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "./ui/table";
 
 export type TransactionListProps = {
 	transactions: Transaction[];
@@ -36,14 +26,16 @@ export function TransactionList({
 							onClick={() => onSelectTransaction(t.id)}
 						>
 							<div className="flex gap-1 group-hover:opacity-100 opacity-0 transition absolute right-0 -top-3">
-								{t.tags.map((tag) => (
-									<span
-										key={tag}
-										className="px-1 py-0.5 text-xs text-stone-400 bg-stone-800 shadow rounded border border-stone-600 hover:bg-stone-700 transition cursor-pointer active:bg-stone-900"
-									>
-										{tag}
-									</span>
-								))}
+								{t.tags
+									.filter((t) => !!t)
+									.map((tag) => (
+										<span
+											key={tag}
+											className="px-1 py-0.5 text-xs text-stone-400 bg-stone-800 shadow rounded border border-stone-600 hover:bg-stone-700 transition cursor-pointer active:bg-stone-900"
+										>
+											{tag}
+										</span>
+									))}
 							</div>
 							<i className="size-4 rounded-full bg-amber-400 shadow-xs" />
 							<div className="flex-1 flex justify-between items-center">
