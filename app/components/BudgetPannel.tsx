@@ -35,9 +35,13 @@ export function BudgetPannel({
 											{currencyFormatter.format(b.budgetExpended / 100)}
 										</p>
 									</div>
-									<div className="w-full">
-										<Progress value={(b.budgetExpended * 100) / b.goal.goal} />
-									</div>
+									{b.goal?.defined && (
+										<div className="w-full">
+											<Progress
+												value={(b.budgetExpended * 100) / b.goal.goal}
+											/>
+										</div>
+									)}
 								</div>
 							</Link>
 						</li>
