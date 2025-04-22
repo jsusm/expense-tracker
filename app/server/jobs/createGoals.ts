@@ -33,8 +33,6 @@ async function createGoalsJob() {
 			),
 		);
 
-	console.log({ _budgets });
-
 	const inserts = [];
 
 	for (const budget of _budgets) {

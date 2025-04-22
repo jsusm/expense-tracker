@@ -8,7 +8,7 @@ export const createBudgetGoalSchema = z.object({
 });
 
 export class BudgetGoalsController {
-	constructor(public db: typeof _db) {}
+	constructor(public db: typeof _db) { }
 
 	async create(
 		budgetId: number,
@@ -27,8 +27,6 @@ export class BudgetGoalsController {
 					eq(budgetGoals.budgetId, budgetId),
 				),
 			);
-
-		console.log(query);
 
 		if (query.rowsAffected === 0) {
 			query = await this.db.insert(budgetGoals).values({

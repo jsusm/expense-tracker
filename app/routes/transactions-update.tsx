@@ -9,20 +9,9 @@ import {
 	CardHeader,
 	CardTitle,
 } from "~/components/ui/card";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "~/components/ui/select";
 import { BudgetController } from "~/server/controllers/BudgetsController";
-import {
-	TransactionController,
-	createTransactionPayload,
-} from "~/server/controllers/TransactionController";
+import { TransactionController } from "~/server/controllers/TransactionController";
 import { db } from "~/server/db/drizzle";
-import type { Budget } from "~/types";
 import type { Route } from "./+types/transactions-update";
 
 export async function loader({ params }: Route.LoaderArgs) {
@@ -37,7 +26,6 @@ export async function loader({ params }: Route.LoaderArgs) {
 	const transaction = await new TransactionController(db).findById(
 		transactionId,
 	);
-	console.log(transaction);
 
 	if (!transaction) {
 		throw new Response("Not found", { status: 404 });

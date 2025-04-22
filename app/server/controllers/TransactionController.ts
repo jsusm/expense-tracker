@@ -24,8 +24,6 @@ export class TransactionController {
 			.from(tags)
 			.where(inArray(tags.label, transaction.tags));
 
-		console.log("tags", transaction.tags);
-
 		const existingTagsLabels = existingTags.map((t) => t.label);
 		const nonExistingTags = transaction.tags.filter(
 			(t) => !existingTagsLabels.includes(t),

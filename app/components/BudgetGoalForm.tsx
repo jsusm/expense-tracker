@@ -40,12 +40,9 @@ export function BudgetGoalForm({
 
 	const fetcher = useFetcher();
 
-	const goal = fetcher.formData?.get("goal") ?? "";
-
 	async function handleSubmit(e: FormEvent<HTMLFormElement>) {
 		// TODO: implement optimistic ui
 
-		console.log(goal);
 		await fetcher.submit(e.currentTarget.form, { method: "post", action: "" });
 		setGoalFormOpen(false);
 	}
