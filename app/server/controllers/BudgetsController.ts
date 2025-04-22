@@ -11,7 +11,7 @@ export const createBudgetPayload = z.object({
 export const updateBudgetPayload = createBudgetPayload.partial();
 
 export class BudgetController {
-	constructor(public db: typeof _db) {}
+	constructor(public db: typeof _db) { }
 
 	async getBudgets() {
 		return await this.db.select().from(budgets);
@@ -91,5 +91,9 @@ export class BudgetController {
 
 	async update(id: number, payload: z.infer<typeof updateBudgetPayload>) {
 		return await this.db.update(budgets).set(payload).where(eq(budgets.id, id));
+	}
+
+	async delete(id: number) {
+		return await this.db.delete(budgets).where(eq(budgets.id, id));
 	}
 }

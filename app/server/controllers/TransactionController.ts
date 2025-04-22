@@ -15,7 +15,7 @@ export const createTransactionPayload = z.object({
 export const updateTransactionPayload = createTransactionPayload.partial();
 
 export class TransactionController {
-	constructor(public db: typeof _db) {}
+	constructor(public db: typeof _db) { }
 
 	async create(transaction: z.infer<typeof createTransactionPayload>) {
 		// check if tags exists
@@ -23,6 +23,8 @@ export class TransactionController {
 			.select()
 			.from(tags)
 			.where(inArray(tags.label, transaction.tags));
+
+		console.log("tags", transaction.tags);
 
 		const existingTagsLabels = existingTags.map((t) => t.label);
 		const nonExistingTags = transaction.tags.filter(
@@ -54,10 +56,16 @@ export class TransactionController {
 			.returning({ insertedId: transactions.id });
 
 		// create transactions-tags relation
-		const tagsRelations = transaction.tags.map<
-			typeof transactionsToTags.$inferInsert
-		>((t) => ({ tag: t, transactionId: result.insertedId }));
-		await this.db.insert(transactionsToTags).values(tagsRelations);
+		const tagsRelations = transaction.tags
+			.filter((t) => t !== "")
+			.map<typeof transactionsToTags.$inferInsert>((t) => ({
+				tag: t,
+				transactionId: result.insertedId,
+			}));
+
+		if (tagsRelations.length > 0) {
+			await this.db.insert(transactionsToTags).values(tagsRelations);
+		}
 
 		return { transactionId: result.insertedId };
 	}
