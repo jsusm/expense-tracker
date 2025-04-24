@@ -21,7 +21,9 @@ export const budgetGoals = sqliteTable(
 		month: integer().notNull(),
 		year: integer().notNull(),
 		goal: integer().notNull(),
-		budgetId: integer("budget_id").references(() => budgets.id),
+		budgetId: integer("budget_id").references(() => budgets.id, {
+			onDelete: "cascade",
+		}),
 		defined: integer({ mode: "boolean" }).default(false).notNull(),
 	},
 	(t) => [primaryKey({ columns: [t.month, t.year, t.budgetId] })],

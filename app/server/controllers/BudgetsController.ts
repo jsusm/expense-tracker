@@ -57,6 +57,7 @@ export class BudgetController {
 				id: budgets.id,
 				label: budgets.label,
 				budgetExpended: sql<number>`SUM(${transactions.amount})`,
+				description: budgets.description,
 				goal: {
 					goal: budgetGoals.goal,
 					defined: budgetGoals.defined,

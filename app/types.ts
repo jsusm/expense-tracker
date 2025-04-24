@@ -7,10 +7,10 @@ export type BudgetView = {
 	label: string;
 	id: number;
 	budgetExpended: number;
-	goal?: {
+	goal: {
 		goal: number;
 		defined: boolean;
-	};
+	} | null;
 };
 
 export type Transaction = {

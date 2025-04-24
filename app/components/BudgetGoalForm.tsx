@@ -18,7 +18,12 @@ export function BudgetGoalForm({
 	lastGoal,
 	children,
 	goalDefined,
-}: PropsWithChildren<{ lastGoal?: number; goalDefined?: boolean }>) {
+	budgetId,
+}: PropsWithChildren<{
+	lastGoal?: number;
+	goalDefined?: boolean;
+	budgetId: string;
+}>) {
 	// if the goal is not defined it will open automaticaly
 	const [isGoalFormOpen, setGoalFormOpen] = useState(!goalDefined);
 
@@ -43,7 +48,10 @@ export function BudgetGoalForm({
 	async function handleSubmit(e: FormEvent<HTMLFormElement>) {
 		// TODO: implement optimistic ui
 
-		await fetcher.submit(e.currentTarget.form, { method: "post", action: "" });
+		await fetcher.submit(e.currentTarget.form, {
+			method: "post",
+			action: `/budgets/${budgetId}/goals/create`,
+		});
 		setGoalFormOpen(false);
 	}
 
@@ -61,6 +69,7 @@ export function BudgetGoalForm({
 					<fetcher.Form
 						className="space-y-4"
 						method="post"
+						action={`/budgets/${budgetId}/goals/create`}
 						onSubmit={handleSubmit}
 					>
 						{lastGoal && !goalDefined && (

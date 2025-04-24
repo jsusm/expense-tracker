@@ -1,4 +1,4 @@
-import { Link, data } from "react-router";
+import { Link } from "react-router";
 import { BudgetGoalForm } from "~/components/BudgetGoalForm";
 import { BudgetPannel } from "~/components/BudgetPannel";
 import { TransactionsPannel } from "~/components/TransactionsPannel";
@@ -11,16 +11,13 @@ import {
 	BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
 import { Button } from "~/components/ui/button";
-import { currencyFormatter, removeNumberFormat } from "~/lib/utils";
-import {
-	BudgetGoalsController,
-	createBudgetGoalSchema,
-} from "~/server/controllers/BudgetGoalsController";
+import { currencyFormatter } from "~/lib/utils";
 import { BudgetController } from "~/server/controllers/BudgetsController";
 import { TransactionController } from "~/server/controllers/TransactionController";
 import { db } from "~/server/db/drizzle";
 import type { Transaction } from "~/types";
 import type { Route } from "./+types/budget";
+import { BudgetDeleteDialog } from "~/components/BudgetDeleteDialog";
 
 export async function loader({ params }: Route.LoaderArgs) {
 	const budgetId = Number.parseInt(params.budgetId);
@@ -40,31 +37,6 @@ export async function loader({ params }: Route.LoaderArgs) {
 	).map((t) => ({ ...t, budget: { label: budget.label, id: budgetId } }));
 
 	return { budget, transactions, otherBudgets };
-}
-
-export async function action({ params, request }: Route.ActionArgs) {
-	let budgetId: number;
-	try {
-		budgetId = Number.parseInt(params.budgetId);
-	} catch (error) {
-		throw new Response("Not found", { status: 404 });
-	}
-
-	const formData = await request.formData();
-	const fields = Object.fromEntries(formData);
-
-	const parsedData = createBudgetGoalSchema.safeParse({
-		goal: Number.parseFloat(removeNumberFormat(fields.goal as string)) * 100,
-	});
-	if (!parsedData.success) {
-		// TODO: Add status code
-		return data(
-			{ success: false, errors: parsedData.error.flatten() },
-			{ status: 400 },
-		);
-	}
-
-	await new BudgetGoalsController(db).create(budgetId, parsedData.data);
 }
 
 export default function Budget({ loaderData }: Route.ComponentProps) {
@@ -102,13 +74,18 @@ export default function Budget({ loaderData }: Route.ComponentProps) {
 					<BudgetGoalForm
 						lastGoal={budget.goal?.lastGoal}
 						goalDefined={budget.goal?.defined}
+						budgetId={budget.id.toString()}
 					>
 						<Button variant={budget.goal?.defined ? "secondary" : "default"}>
 							{!budget.goal?.defined ? "Define a Goal" : "Change goal"}
 						</Button>
 					</BudgetGoalForm>
-					<Button variant="secondary">Edit</Button>
-					<Button variant="destructive">Delete</Button>
+					<Button variant="secondary">
+						<Link to={`/budgets/${budget.id}/update`}>Edit</Link>
+					</Button>
+					<BudgetDeleteDialog budgetId={budget.id}>
+						<Button variant="destructive">Delete</Button>
+					</BudgetDeleteDialog>
 				</div>
 			</div>
 			<div className="grid md:grid-cols-2 max-w-5xl gap-8">
