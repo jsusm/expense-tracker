@@ -22,7 +22,7 @@ export function TransactionsPannel({
 		<div className={className}>
 			<div className="py-4 flex justify-between">
 				<p className="text-lg font-medium">Transactions</p>
-				<Button asChild>
+				<Button asChild variant="secondary">
 					<Link to="/transactions/create">Create transactions + </Link>
 				</Button>
 			</div>

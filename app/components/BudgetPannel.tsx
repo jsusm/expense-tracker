@@ -13,7 +13,7 @@ export function BudgetPannel({
 		<div className={className}>
 			<div className="py-4 flex justify-between">
 				<p className="text-lg font-medium">{title}</p>
-				<Button asChild>
+				<Button asChild variant="secondary">
 					<Link to="/budgets/create">Create Budget + </Link>
 				</Button>
 			</div>

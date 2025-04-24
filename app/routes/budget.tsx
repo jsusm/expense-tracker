@@ -80,7 +80,7 @@ export default function Budget({ loaderData }: Route.ComponentProps) {
 							{!budget.goal?.defined ? "Define a Goal" : "Change goal"}
 						</Button>
 					</BudgetGoalForm>
-					<Button variant="secondary">
+					<Button variant="secondary" asChild>
 						<Link to={`/budgets/${budget.id}/update`}>Edit</Link>
 					</Button>
 					<BudgetDeleteDialog budgetId={budget.id}>
@@ -88,7 +88,7 @@ export default function Budget({ loaderData }: Route.ComponentProps) {
 					</BudgetDeleteDialog>
 				</div>
 			</div>
-			<div className="grid md:grid-cols-2 max-w-5xl gap-8">
+			<div className="grid md:grid-cols-2 gap-8 w-full">
 				<BudgetPannel budgets={otherBudgets} />
 				<TransactionsPannel transactions={transactions} />
 			</div>
