@@ -25,3 +25,27 @@ export type Transaction = {
 export type Tag = {
 	label: string;
 };
+
+export interface DolarPriceApiResponse {
+	datetime: {
+		date: string;
+		time: string;
+	};
+	monitors: {
+		bcv: MonitorInfo;
+		enparalelovzla: MonitorInfo;
+		[key: string]: MonitorInfo | undefined; // Allows for other potential monitors
+	};
+}
+
+export interface MonitorInfo {
+	change: number;
+	color: string;
+	image: string;
+	last_update: string;
+	percent: number;
+	price: number;
+	price_old: number;
+	symbol: string;
+	title: string;
+}

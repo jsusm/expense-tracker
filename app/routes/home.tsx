@@ -4,6 +4,14 @@ import { BudgetController } from "~/server/controllers/BudgetsController";
 import { TransactionController } from "~/server/controllers/TransactionController";
 import { db } from "~/server/db/drizzle";
 import type { Route } from "./+types/home";
+import {
+	Breadcrumb,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	BreadcrumbList,
+	BreadcrumbPage,
+	BreadcrumbSeparator,
+} from "~/components/ui/breadcrumb";
 
 export function meta() {
 	return [
@@ -23,9 +31,20 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 	const { transactions, budgets } = loaderData;
 
 	return (
-		<div className="flex flex-col md:flex-row gap-8 px-8">
-			<BudgetPannel budgets={budgets} className="md:w-lg" />
-			<TransactionsPannel className="md:w-lg" transactions={transactions} />
+		<div className="grid pt-8 px-4 sm:px-8 gap-y-8">
+			<Breadcrumb>
+				<BreadcrumbList>
+					<BreadcrumbItem>
+						<BreadcrumbLink asChild>
+							<BreadcrumbPage> Dashboard</BreadcrumbPage>
+						</BreadcrumbLink>
+					</BreadcrumbItem>
+				</BreadcrumbList>
+			</Breadcrumb>
+			<div className="grid md:grid-cols-2 gap-8 w-full">
+				<BudgetPannel budgets={budgets} />
+				<TransactionsPannel transactions={transactions} />
+			</div>
 		</div>
 	);
 }
