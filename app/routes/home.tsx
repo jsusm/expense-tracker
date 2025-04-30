@@ -12,7 +12,7 @@ import {
 	BreadcrumbPage,
 } from "~/components/ui/breadcrumb";
 import { DolarPriceController } from "~/server/controllers/DolarPriceController";
-import { DolarInfoCard } from "~/components/DolarInfoCard";
+import { SectionCards } from "~/components/SectionsCards";
 
 export function meta() {
 	return [
@@ -43,10 +43,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 					</BreadcrumbItem>
 				</BreadcrumbList>
 			</Breadcrumb>
-			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-				<DolarInfoCard price={dolarPrice.paralelo} title="Parallel Dolar" />
-				<DolarInfoCard price={dolarPrice.oficial} title="BDV Dolar" />
-			</div>
+			<SectionCards dolarPrice={dolarPrice} />
 			<div className="grid md:grid-cols-2 gap-8 w-full">
 				<BudgetPannel budgets={budgets} />
 				<TransactionsPannel transactions={transactions} />

@@ -1,6 +1,5 @@
 import {
 	Card,
-	CardContent,
 	CardDescription,
 	CardFooter,
 	CardHeader,
@@ -49,7 +48,7 @@ export function DolarInfoCard({
 					<Badge variant={"outline"}>
 						Old price: {currencyFormatterVES.format(price.price_old)}
 					</Badge>
-					<Badge variant={"outline"}>Fecha: {price.last_update}</Badge>
+					<Badge variant={"outline"}>Date: {price.last_update}</Badge>
 				</div>
 			</CardFooter>
 		</Card>
