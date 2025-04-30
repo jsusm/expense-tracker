@@ -10,8 +10,9 @@ import {
 	BreadcrumbLink,
 	BreadcrumbList,
 	BreadcrumbPage,
-	BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
+import { DolarPriceController } from "~/server/controllers/DolarPriceController";
+import { DolarInfoCard } from "~/components/DolarInfoCard";
 
 export function meta() {
 	return [
@@ -23,12 +24,13 @@ export function meta() {
 export async function loader() {
 	const result = await new TransactionController(db).read();
 	const budgets = await new BudgetController(db).read();
+	const dolarPrice = await new DolarPriceController().getDolarPrice();
 
-	return { transactions: result, budgets };
+	return { transactions: result, budgets, dolarPrice };
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-	const { transactions, budgets } = loaderData;
+	const { transactions, budgets, dolarPrice } = loaderData;
 
 	return (
 		<div className="grid pt-8 px-4 sm:px-8 gap-y-8">
@@ -41,6 +43,10 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 					</BreadcrumbItem>
 				</BreadcrumbList>
 			</Breadcrumb>
+			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+				<DolarInfoCard price={dolarPrice.paralelo} title="Parallel Dolar" />
+				<DolarInfoCard price={dolarPrice.oficial} title="BDV Dolar" />
+			</div>
 			<div className="grid md:grid-cols-2 gap-8 w-full">
 				<BudgetPannel budgets={budgets} />
 				<TransactionsPannel transactions={transactions} />
