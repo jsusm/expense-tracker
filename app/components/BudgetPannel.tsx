@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { currencyFormatter } from "~/lib/utils";
+import { cn, currencyFormatter, getBudgetColor } from "~/lib/utils";
 import type { BudgetView } from "~/types";
 import { Button } from "./ui/button";
 import { Progress } from "./ui/progress";
@@ -25,7 +25,12 @@ export function BudgetPannel({
 								to={`/budgets/${b.id}`}
 								className="flex items-center gap-4 border border-stone-800 hover:border-stone-700 rounded-lg bg-stone-800 px-3 sm:px-4 py-2 sm:py-3 shadow group relative active:bg-stone-900 transition-colors w-full"
 							>
-								<i className="size-4 rounded-full bg-amber-400 shadow-xs" />
+								<i
+									className={cn(
+										"size-4 rounded-full shadow-xs",
+										getBudgetColor(b.label),
+									)}
+								/>
 								<div className="w-full grid gap-2">
 									<div className="flex-1 flex justify-between items-center">
 										<p className="sm:text-lg font-medium text-stone-100 leading-6">

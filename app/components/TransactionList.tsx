@@ -1,4 +1,4 @@
-import { currencyFormatter } from "~/lib/utils";
+import { cn, currencyFormatter, getBudgetColor } from "~/lib/utils";
 import type { Transaction } from "~/types";
 
 export type TransactionListProps = {
@@ -37,7 +37,12 @@ export function TransactionList({
 										</span>
 									))}
 							</div>
-							<i className="size-4 rounded-full bg-amber-400 shadow-xs" />
+							<i
+								className={cn(
+									"size-4 rounded-full bg-amber-400 shadow-xs",
+									getBudgetColor(t.budget.label),
+								)}
+							/>
 							<div className="flex-1 flex justify-between items-center">
 								<div className="grid gap-0.5 text-left">
 									<p className="sm:text-lg font-medium text-stone-100 leading-6">
