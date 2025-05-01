@@ -13,6 +13,7 @@ import {
 } from "~/components/ui/breadcrumb";
 import { DolarPriceController } from "~/server/controllers/DolarPriceController";
 import { SectionCards } from "~/components/SectionsCards";
+import { ExpensesChart } from "~/components/ExpensesChart";
 
 export function meta() {
 	return [
@@ -31,17 +32,25 @@ export async function loader() {
 			new Date().getMonth() + 1,
 		);
 
+	const chartData = await transactionController.getBalancePerDay();
+
 	return {
 		transactions: result,
 		budgets,
 		dolarPrice,
 		totalTransactionCurrentMonth,
+		chartData,
 	};
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-	const { transactions, budgets, dolarPrice, totalTransactionCurrentMonth } =
-		loaderData;
+	const {
+		transactions,
+		budgets,
+		dolarPrice,
+		totalTransactionCurrentMonth,
+		chartData,
+	} = loaderData;
 
 	return (
 		<div className="grid pt-8 px-4 sm:px-8 gap-y-8">
@@ -59,7 +68,10 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 				totalTransactions={totalTransactionCurrentMonth}
 			/>
 			<div className="grid md:grid-cols-2 gap-8 w-full">
-				<BudgetPannel budgets={budgets} />
+				<div className="flex flex-col gap-8">
+					<ExpensesChart data={chartData} />
+					<BudgetPannel budgets={budgets} />
+				</div>
 				<TransactionsPannel transactions={transactions} />
 			</div>
 		</div>

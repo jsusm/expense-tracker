@@ -15,8 +15,8 @@ export const createTransactionPayload = z.object({
 
 export const updateTransactionPayload = createTransactionPayload.partial();
 
-type TransactionAmountPerDay = {
-	amount: number;
+export type TransactionAmountPerDay = {
+	expended: number;
 	date: string;
 };
 
@@ -170,7 +170,7 @@ export class TransactionController {
 WITH RECURSIVE dates(n) AS (
     SELECT 0
     UNION ALL
-    SELECT n + 1 FROM dates WHERE n < 10
+    SELECT n + 1 FROM dates WHERE n < 30
 )
 SELECT
   DATE('now', '-'||n||' day') as date,
@@ -178,7 +178,7 @@ SELECT
 FROM dates
   LEFT JOIN ${transactions} ON DATE(${transactions.datetime}, 'unixepoch') == date
   GROUP BY date
-ORDER BY date DESC;
+ORDER BY date ASC;
 `);
 
 		return r.rows as unknown[] as TransactionAmountPerDay[];

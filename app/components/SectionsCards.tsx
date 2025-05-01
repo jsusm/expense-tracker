@@ -31,7 +31,7 @@ export function SectionCards({
 					</CardTitle>
 				</CardHeader>
 				<CardFooter>
-					<p className="text-muted-foreground">
+					<p className="text-muted-foreground text-sm">
 						In {totalTransactions.count} transactions
 					</p>
 				</CardFooter>
