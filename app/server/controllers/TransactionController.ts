@@ -15,6 +15,11 @@ export const createTransactionPayload = z.object({
 
 export const updateTransactionPayload = createTransactionPayload.partial();
 
+type TransactionAmountPerDay = {
+	amount: number;
+	date: string;
+};
+
 export class TransactionController {
 	constructor(public db: typeof _db) {}
 
@@ -158,5 +163,24 @@ export class TransactionController {
 
 		console.log({ r, month, month2: addCero(month) });
 		return r;
+	}
+
+	async getBalancePerDay() {
+		const r = await this.db.run(sql`
+WITH RECURSIVE dates(n) AS (
+    SELECT 0
+    UNION ALL
+    SELECT n + 1 FROM dates WHERE n < 10
+)
+SELECT
+  DATE('now', '-'||n||' day') as date,
+  IFNULL(SUM(${transactions.amount}),0) as expended
+FROM dates
+  LEFT JOIN ${transactions} ON DATE(${transactions.datetime}, 'unixepoch') == date
+  GROUP BY date
+ORDER BY date DESC;
+`);
+
+		return r.rows as unknown[] as TransactionAmountPerDay[];
 	}
 }

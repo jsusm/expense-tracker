@@ -31,7 +31,9 @@ export function SectionCards({
 					</CardTitle>
 				</CardHeader>
 				<CardFooter>
-					<p>In {totalTransactions.count} transactions</p>
+					<p className="text-muted-foreground">
+						In {totalTransactions.count} transactions
+					</p>
 				</CardFooter>
 			</Card>
 			<DolarInfoCard price={dolarPrice.paralelo} title="Parallel Dolar" />
