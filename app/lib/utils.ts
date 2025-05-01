@@ -1,4 +1,3 @@
-import { cva } from "class-variance-authority";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -39,3 +38,10 @@ export const getBudgetColor = (title: string) => {
 	}
 	return budgetColors[codeColor % budgetColors.length];
 };
+
+export function addCero(n: number) {
+	if (n <= 9 && n >= 0) {
+		return `0${n}`;
+	}
+	return n;
+}

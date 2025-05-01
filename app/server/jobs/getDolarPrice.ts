@@ -1,6 +1,9 @@
 import "dotenv";
-import { DolarPriceController } from "../controllers/DolarPriceController";
+import { TransactionController } from "../controllers/TransactionController";
+import { db } from "../db/drizzle";
 
-const controller = new DolarPriceController();
+const controller = new TransactionController(db);
 
-controller.getDolarPrice();
+console.log(
+	await controller.totalTransactionsPerMonth(new Date().getMonth() + 1),
+);

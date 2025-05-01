@@ -14,6 +14,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "../ui/select";
+import { addCero } from "~/lib/utils";
 
 export type TransactionFormFieldsProps = {
 	budgets: Budget[];
@@ -32,13 +33,6 @@ export type TransactionFormFieldsProps = {
 		budget?: string[];
 	};
 };
-
-function addCero(n: number) {
-	if (n <= 9 && n >= 0) {
-		return `0${n}`;
-	}
-	return n;
-}
 
 const dateFormatOptions = {
 	mask: "____-__-__ __:__",

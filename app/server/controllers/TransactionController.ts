@@ -1,8 +1,9 @@
-import { asc, desc, eq, inArray, sql } from "drizzle-orm";
+import { asc, desc, eq, gte, inArray, and, sql } from "drizzle-orm";
 import { datetime } from "drizzle-orm/mysql-core";
 import * as z from "zod";
 import type { db as _db } from "../db/drizzle";
 import { budgets, tags, transactions, transactionsToTags } from "../db/schema";
+import { addCero } from "~/lib/utils";
 
 export const createTransactionPayload = z.object({
 	amount: z.number().int(),
@@ -15,7 +16,7 @@ export const createTransactionPayload = z.object({
 export const updateTransactionPayload = createTransactionPayload.partial();
 
 export class TransactionController {
-	constructor(public db: typeof _db) { }
+	constructor(public db: typeof _db) {}
 
 	async create(transaction: z.infer<typeof createTransactionPayload>) {
 		// check if tags exists
@@ -136,5 +137,26 @@ export class TransactionController {
 				)
 				.groupBy(transactions.id)
 		).map((t) => ({ ...t, tags: t.tags.split(",") }));
+	}
+
+	async totalTransactionsPerMonth(month: number) {
+		// TODO: Add support for the year
+		const r = (
+			await this.db
+				.select({
+					amount: sql<number>`SUM(${transactions.amount})`,
+					count: sql<number>`COUNT(*)`,
+				})
+				.from(transactions)
+				.where(
+					and(
+						sql`${transactions.datetime} >= unixepoch('2025-04-01 00:00')`,
+						sql`${transactions.datetime} < unixepoch('2025-04-01 00:00', '+1 month')`,
+					),
+				)
+		)[0];
+
+		console.log({ r, month, month2: addCero(month) });
+		return r;
 	}
 }

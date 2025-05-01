@@ -16,8 +16,6 @@ export function DolarInfoCard({
 }: { price: DolarPriceData; title: string }) {
 	const priceChangeSign = price.price < price.price_old ? -1 : 1;
 
-	console.log({ priceChangeSign, title, price });
-
 	const TrendingIcon = priceChangeSign === -1 ? TrendingDown : TrendingUp;
 
 	return (

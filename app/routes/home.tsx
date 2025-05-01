@@ -22,15 +22,26 @@ export function meta() {
 }
 
 export async function loader() {
-	const result = await new TransactionController(db).read();
+	const transactionController = new TransactionController(db);
+	const result = await transactionController.read();
 	const budgets = await new BudgetController(db).read();
 	const dolarPrice = await new DolarPriceController().getDolarPrice();
+	const totalTransactionCurrentMonth =
+		await transactionController.totalTransactionsPerMonth(
+			new Date().getMonth() + 1,
+		);
 
-	return { transactions: result, budgets, dolarPrice };
+	return {
+		transactions: result,
+		budgets,
+		dolarPrice,
+		totalTransactionCurrentMonth,
+	};
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-	const { transactions, budgets, dolarPrice } = loaderData;
+	const { transactions, budgets, dolarPrice, totalTransactionCurrentMonth } =
+		loaderData;
 
 	return (
 		<div className="grid pt-8 px-4 sm:px-8 gap-y-8">
@@ -43,7 +54,10 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 					</BreadcrumbItem>
 				</BreadcrumbList>
 			</Breadcrumb>
-			<SectionCards dolarPrice={dolarPrice} />
+			<SectionCards
+				dolarPrice={dolarPrice}
+				totalTransactions={totalTransactionCurrentMonth}
+			/>
 			<div className="grid md:grid-cols-2 gap-8 w-full">
 				<BudgetPannel budgets={budgets} />
 				<TransactionsPannel transactions={transactions} />
