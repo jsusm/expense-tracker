@@ -53,7 +53,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 	} = loaderData;
 
 	return (
-		<div className="grid pt-8 px-4 sm:px-8 gap-y-8">
+		<div className="grid pt-8 px-4 sm:px-8 gap-y-4">
 			<Breadcrumb>
 				<BreadcrumbList>
 					<BreadcrumbItem>
@@ -67,8 +67,8 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 				dolarPrice={dolarPrice}
 				totalTransactions={totalTransactionCurrentMonth}
 			/>
-			<div className="grid md:grid-cols-2 gap-8 w-full">
-				<div className="flex flex-col gap-8">
+			<div className="grid md:grid-cols-2 gap-4 w-full">
+				<div className="flex flex-col gap-4">
 					<ExpensesChart data={chartData} />
 					<BudgetPannel budgets={budgets} />
 				</div>

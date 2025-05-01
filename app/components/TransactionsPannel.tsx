@@ -4,6 +4,7 @@ import type { Transaction } from "~/types";
 import { TransactionDetailResponsive } from "./TransactionDetails";
 import { TransactionList } from "./TransactionList";
 import { Button } from "./ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 export function TransactionsPannel({
 	transactions,
@@ -19,25 +20,27 @@ export function TransactionsPannel({
 	);
 
 	return (
-		<div className={className}>
-			<div className="py-4 flex justify-between">
-				<p className="text-lg font-medium">Transactions</p>
+		<Card className={className}>
+			<CardHeader className="flex justify-between items-center">
+				<CardTitle>Transactions</CardTitle>
 				<Button asChild variant="secondary">
 					<Link to="/transactions/create">Create transactions + </Link>
 				</Button>
-			</div>
-			<TransactionList
-				transactions={transactions}
-				onSelectTransaction={(id: number) => {
-					setSelectedTransactionId(id);
-					setTransactionDialogOpen(true);
-				}}
-			/>
+			</CardHeader>
+			<CardContent>
+				<TransactionList
+					transactions={transactions}
+					onSelectTransaction={(id: number) => {
+						setSelectedTransactionId(id);
+						setTransactionDialogOpen(true);
+					}}
+				/>
+			</CardContent>
 			<TransactionDetailResponsive
 				isOpen={transactionDialogOpen}
 				setOpen={setTransactionDialogOpen}
 				transaction={transaction}
 			/>
-		</div>
+		</Card>
 	);
 }

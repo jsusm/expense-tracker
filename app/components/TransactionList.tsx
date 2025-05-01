@@ -12,7 +12,7 @@ export function TransactionList({
 }: TransactionListProps) {
 	return (
 		<div className="">
-			<ul className="flex flex-col sm:gap-4 gap-3">
+			<ul className="flex flex-col sm:gap-3 gap-2">
 				{!transactions.length && (
 					<p className="sm:text-lg font-medium text-center">
 						There's no Transactions
@@ -22,7 +22,7 @@ export function TransactionList({
 					<li key={t.id}>
 						<button
 							type="button"
-							className="flex items-center gap-4 border border-stone-800 hover:border-stone-700 rounded-lg bg-stone-800 px-3 sm:px-4 py-2 sm:py-3 shadow group relative active:bg-stone-900 transition-colors w-full"
+							className="flex items-center gap-4 border border-stone-800 hover:border-stone-700 rounded-lg bg-stone-800 px-3 sm:px-4 py-2 shadow group relative active:bg-stone-900 transition-colors w-full"
 							onClick={() => onSelectTransaction(t.id)}
 						>
 							<div className="flex gap-1 group-hover:opacity-100 opacity-0 transition absolute right-0 -top-3">
@@ -44,7 +44,7 @@ export function TransactionList({
 								)}
 							/>
 							<div className="flex-1 flex justify-between items-center">
-								<div className="grid gap-0.5 text-left">
+								<div className="text-left">
 									<p className="sm:text-lg font-medium text-stone-100 leading-6">
 										{t.budget.label}
 									</p>
