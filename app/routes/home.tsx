@@ -14,6 +14,7 @@ import {
 import { DolarPriceController } from "~/server/controllers/DolarPriceController";
 import { SectionCards } from "~/components/SectionsCards";
 import { ExpensesChart } from "~/components/ExpensesChart";
+import { DolarHistoryChart } from "~/components/DolarHistoryChart";
 
 export function meta() {
 	return [
@@ -24,9 +25,11 @@ export function meta() {
 
 export async function loader() {
 	const transactionController = new TransactionController(db);
+	const dolarPriceController = new DolarPriceController();
 	const result = await transactionController.read();
 	const budgets = await new BudgetController(db).read();
-	const dolarPrice = await new DolarPriceController().getDolarPrice();
+	const dolarPrice = await dolarPriceController.getDolarPrice();
+	const dolarHistory = await dolarPriceController.getDolarPriceHistory(90);
 	const totalTransactionCurrentMonth =
 		await transactionController.totalTransactionsPerMonth(
 			new Date().getMonth() + 1,
@@ -40,6 +43,7 @@ export async function loader() {
 		dolarPrice,
 		totalTransactionCurrentMonth,
 		chartData,
+		dolarHistory,
 	};
 }
 
@@ -50,7 +54,10 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 		dolarPrice,
 		totalTransactionCurrentMonth,
 		chartData,
+		dolarHistory,
 	} = loaderData;
+
+	console.log(dolarHistory);
 
 	return (
 		<div className="grid pt-8 px-4 sm:px-8 gap-y-4">
@@ -69,8 +76,9 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 			/>
 			<div className="grid md:grid-cols-2 gap-4 w-full">
 				<div className="flex flex-col gap-4">
-					<ExpensesChart data={chartData} />
 					<BudgetPannel budgets={budgets} />
+					<ExpensesChart data={chartData} />
+					<DolarHistoryChart data={dolarHistory.history} />
 				</div>
 				<TransactionsPannel transactions={transactions} />
 			</div>

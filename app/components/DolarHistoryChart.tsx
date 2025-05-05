@@ -5,37 +5,57 @@ import {
 	type ChartConfig,
 } from "~/components/ui/chart";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+import {
+	Area,
+	AreaChart,
+	CartesianGrid,
+	Line,
+	LineChart,
+	XAxis,
+	YAxis,
+} from "recharts";
 import type { TransactionAmountPerDay } from "~/server/controllers/TransactionController";
+import type {
+	DolarHistoryPriceData,
+	DolarHistoryPriceDataAPI,
+} from "~/server/controllers/DolarPriceController";
 
 const chartConfig = {
-	expended: {
-		label: "Expended",
+	oficial: {
+		label: "Oficial",
 		color: "var(--chart-1)",
+	},
+	parallel: {
+		label: "Parallel",
+		color: "var(--chart-2)",
 	},
 } satisfies ChartConfig;
 
-export const ExpensesChart = ({
+export const DolarHistoryChart = ({
 	data,
-}: { data: TransactionAmountPerDay[] }) => {
+}: {
+	data: DolarHistoryPriceData[];
+}) => {
 	const dateFormatter = new Intl.DateTimeFormat("en", {
 		day: "2-digit",
 		month: "short",
 	});
-	const chartData = data.map((v) => ({ ...v, expended: v.expended / 100 }));
+
+	console.log({ data });
+
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>Expenses Per Day</CardTitle>
+				<CardTitle>Dolar Price History</CardTitle>
 			</CardHeader>
 			<CardContent className="relative">
 				<ChartContainer
 					config={chartConfig}
 					className="max-h-[250px] md:w-full"
 				>
-					<AreaChart
+					<LineChart
 						accessibilityLayer
-						data={chartData}
+						data={data}
 						margin={{
 							left: 16,
 							right: 16,
@@ -49,30 +69,22 @@ export const ExpensesChart = ({
 						/>
 						<ChartTooltip content={<ChartTooltipContent />} />
 						<CartesianGrid vertical={false} />
-						<defs>
-							<linearGradient id="fillExpended" x1="0" y1="0" x2="0" y2="1">
-								<stop
-									offset="5%"
-									stopColor="var(--color-expended)"
-									stopOpacity={0.8}
-								/>
-								<stop
-									offset="95%"
-									stopColor="var(--color-expended)"
-									stopOpacity={0.1}
-								/>
-							</linearGradient>
-						</defs>
 
-						<Area
-							dataKey="expended"
+						<Line
+							dataKey="oficialPrice"
 							type="linear"
-							fill="url(#fillExpended)"
-							fillOpacity={0.4}
-							stroke="var(--color-expended)"
-							stackId="a"
+							stroke="var(--color-oficial)"
+							strokeWidth={2}
+							dot={false}
 						/>
-					</AreaChart>
+						<Line
+							dataKey="parallelPrice"
+							type="linear"
+							strokeWidth={2}
+							stroke="var(--color-parallel)"
+							dot={false}
+						/>
+					</LineChart>
 				</ChartContainer>
 			</CardContent>
 		</Card>
